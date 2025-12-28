@@ -39,21 +39,23 @@ dev: frontend-install frontend-build
 # Build production application
 build:
 	@echo "Building production application..."
-	wails build
+	VITE_APP_VERSION=$(VERSION) wails build
 	@echo "Build complete! Application is in build/bin/"
 
 package: frontend-build
 	@echo "Building macOS packages for amd64 and arm64..."
 	@rm -rf output && mkdir -p output
 	@echo "Building darwin/amd64..."
-	wails build -platform darwin/amd64
-	@cp -R build/bin/DevTools.app output/DevTools-$(VERSION)-darwin-amd64.app
-	@cd output && zip -qry DevTools-$(VERSION)-darwin-amd64.zip DevTools-$(VERSION)-darwin-amd64.app
+	VITE_APP_VERSION=$(VERSION) wails build -platform darwin/amd64
+	@rm -rf output/darwin-amd64 && mkdir -p output/darwin-amd64
+	@cp -R build/bin/DevTools.app output/darwin-amd64/DevTools.app
+	@cd output && zip -qry DevTools-$(VERSION)-darwin-amd64.zip darwin-amd64
 	@rm -rf build/bin
 	@echo "Building darwin/arm64..."
-	wails build -platform darwin/arm64
-	@cp -R build/bin/DevTools.app output/DevTools-$(VERSION)-darwin-arm64.app
-	@cd output && zip -qry DevTools-$(VERSION)-darwin-arm64.zip DevTools-$(VERSION)-darwin-arm64.app
+	VITE_APP_VERSION=$(VERSION) wails build -platform darwin/arm64
+	@rm -rf output/darwin-arm64 && mkdir -p output/darwin-arm64
+	@cp -R build/bin/DevTools.app output/darwin-arm64/DevTools.app
+	@cd output && zip -qry DevTools-$(VERSION)-darwin-arm64.zip darwin-arm64
 	@echo "Packages ready in output/:"
 	@ls -1 output/*.zip
 
