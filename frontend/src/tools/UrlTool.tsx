@@ -92,7 +92,7 @@ export function UrlTool() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="Enter text to encode or URL encoded string to decode..."
-              className="flex-1 w-full p-4 border border-gray-300 dark:border-gray-600 rounded-lg resize-none font-mono text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+              className="flex-1 w-full p-4 border border-gray-300 dark:border-gray-600 rounded-lg resize-none font-mono text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 min-h-[140px] md:min-h-[180px] lg:min-h-[220px] max-h-[45vh]"
             />
           </div>
 
@@ -163,7 +163,7 @@ export function UrlTool() {
               value={output}
               readOnly
               placeholder="Result will appear here..."
-              className="flex-1 w-full p-4 border border-gray-300 dark:border-gray-600 rounded-lg resize-none font-mono text-sm bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+              className="flex-1 w-full p-4 border border-gray-300 dark:border-gray-600 rounded-lg resize-none font-mono text-sm bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 min-h-[140px] md:min-h-[180px] lg:min-h-[220px] max-h-[45vh]"
             />
           </div>
         </div>

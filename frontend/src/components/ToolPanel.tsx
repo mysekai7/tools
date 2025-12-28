@@ -1,4 +1,5 @@
-import { ReactNode, useState, useEffect } from 'react';
+import { ReactNode } from 'react';
+import { Badge, Card, CardContent, CardDescription, CardHeader, CardTitle, Textarea } from './ui';
 
 interface ToolPanelProps {
   title: string;
@@ -18,33 +19,28 @@ export function ToolPanel({
   error
 }: ToolPanelProps) {
   return (
-    <div className="h-full flex flex-col p-4 md:p-6 bg-white dark:bg-gray-900 overflow-auto">
-      {/* Header */}
-      <div className="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-        <div>
-          <h2 className="text-xl md:text-2xl font-bold text-gray-800 dark:text-white">{title}</h2>
-          <p className="text-gray-500 dark:text-gray-400 mt-1 text-sm md:text-base">
-            {description}
-            {shortcut && (
-              <span className="ml-2 text-xs text-gray-400 dark:text-gray-500">{shortcut}</span>
-            )}
-          </p>
+    <Card className="h-full rounded-[28px] border border-slate-200/70 bg-white/95 shadow-[0_22px_65px_-40px_rgba(15,23,42,0.55)] backdrop-blur dark:border-slate-800/70 dark:bg-slate-900/75">
+      <CardHeader className="flex flex-col items-center justify-center gap-3 rounded-t-[28px] border-b border-slate-100/90 bg-slate-50/70 px-8 py-6 text-center dark:border-slate-800/70 dark:bg-slate-900/80">
+        <div className="space-y-1">
+          <CardTitle className="text-[22px] font-semibold text-slate-900 dark:text-slate-50">{title}</CardTitle>
+          <CardDescription className="flex flex-wrap items-center justify-center gap-2 text-sm text-slate-500 dark:text-slate-400">
+            <span>{description}</span>
+            {shortcut && <span className="text-xs text-slate-400">{shortcut}</span>}
+          </CardDescription>
         </div>
-        {actions && <div className="flex items-center gap-2">{actions}</div>}
-      </div>
+        {actions && <div className="flex items-center justify-center gap-2">{actions}</div>}
+      </CardHeader>
 
-      {/* Error */}
       {error && (
-        <div className="mb-4 p-3 bg-red-100 dark:bg-red-900/30 border border-red-300 dark:border-red-700 text-red-700 dark:text-red-400 rounded-lg text-sm">
+        <div className="mx-5 mb-4 rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-100">
           {error}
         </div>
       )}
 
-      {/* Content */}
-      <div className="flex-1 flex flex-col min-h-0">
+      <CardContent className="flex flex-1 flex-col gap-4 min-h-0 px-6 py-5 lg:p-6">
         {children}
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 }
 
@@ -55,7 +51,7 @@ interface ResponsiveGridProps {
 
 export function ResponsiveGrid({ children, className = '' }: ResponsiveGridProps) {
   return (
-    <div className={`grid grid-cols-1 lg:grid-cols-2 gap-4 ${className}`}>
+    <div className={`grid grid-cols-1 gap-4 lg:grid-cols-2 ${className}`}>
       {children}
     </div>
   );
@@ -80,28 +76,20 @@ export function TextAreaPanel({
   readOnly = false,
   className = '',
   actions,
-  minHeight = 'min-h-[120px] md:min-h-[200px]'
+  minHeight = 'min-h-[140px] md:min-h-[180px] lg:min-h-[220px] max-h-[45vh]'
 }: TextAreaPanelProps) {
   return (
-    <div className={`flex flex-col flex-1 ${className}`}>
-      <div className="flex items-center justify-between mb-2">
-        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">{label}</label>
+    <div className={`flex flex-col gap-2 rounded-[22px] border border-slate-200/90 bg-white/95 p-4 shadow-[0_18px_48px_-38px_rgba(15,23,42,0.55)] dark:border-slate-800/80 dark:bg-slate-900/60 ${className}`}>
+      <div className="flex items-center justify-between gap-2">
+        <label className="text-sm font-semibold text-slate-800 dark:text-slate-200">{label}</label>
         {actions}
       </div>
-      <textarea
+      <Textarea
         value={value}
         onChange={onChange ? (e) => onChange(e.target.value) : undefined}
         placeholder={placeholder}
         readOnly={readOnly}
-        className={`
-          flex-1 w-full p-3 md:p-4
-          border border-gray-300 dark:border-gray-600 rounded-lg
-          resize-none font-mono text-sm
-          focus:ring-2 focus:ring-blue-500 focus:border-transparent
-          ${readOnly ? 'bg-gray-50 dark:bg-gray-800' : 'bg-white dark:bg-gray-800'}
-          text-gray-900 dark:text-gray-100
-          ${minHeight}
-        `}
+        className={`${minHeight} ${readOnly ? 'bg-slate-50 dark:bg-slate-900/50' : ''}`}
       />
     </div>
   );

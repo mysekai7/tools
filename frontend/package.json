@@ -6,15 +6,23 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "build:version": "VITE_APP_VERSION=${VITE_APP_VERSION:-dev} tsc && VITE_APP_VERSION=${VITE_APP_VERSION:-dev} vite build",
     "preview": "vite preview"
   },
   "dependencies": {
+    "@radix-ui/react-dialog": "^1.1.15",
+    "@radix-ui/react-scroll-area": "^1.2.10",
+    "@radix-ui/react-switch": "^1.2.6",
+    "@radix-ui/react-toggle": "^1.1.10",
+    "@radix-ui/react-tooltip": "^1.2.8",
+    "clsx": "^2.1.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@headlessui/react": "^2.2.9",
     "@heroicons/react": "^2.2.0",
+    "@resvg/resvg-js": "^2.6.2",
     "@tailwindcss/postcss": "^4.1.18",
     "@types/react": "^18.0.17",
     "@types/react-dom": "^18.0.6",

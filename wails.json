@@ -3,9 +3,9 @@
   "name": "DevTools",
   "outputfilename": "DevTools",
   "frontend:install": "npm install",
-  "frontend:build": "npm run build",
-  "frontend:dev:watcher": "npm run dev",
-  "frontend:dev:serverUrl": "auto",
+  "frontend:build": "npm run build:version",
+  "frontend:dev:watcher": "",
+  "frontend:dev:serverUrl": "",
   "author": {
     "name": "root",
     "email": "chaowang1@alauda.io"

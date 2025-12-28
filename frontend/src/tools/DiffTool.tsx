@@ -2,7 +2,8 @@ import { useState } from 'react';
 import '../types/wails.d';
 import { useKeyboardShortcuts } from '../hooks';
 import { DiffLine, DiffStats } from '../types/wails.d';
-import { ToolPanel, ButtonGroup } from '../components';
+import { ButtonGroup, TextAreaPanel, ResponsiveGrid } from '../components';
+import { Badge, Button } from '../components/ui';
 
 type ViewMode = 'split' | 'unified';
 
@@ -165,96 +166,86 @@ export function DiffTool() {
   };
 
   return (
-    <ToolPanel
-      title="Text Compare"
-      description="Compare differences between two texts, similar to Git Diff"
-      shortcut="Cmd+Enter to compare"
-      error={error}
-    >
-      {/* Input Area */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
-        <div className="flex flex-col">
-          <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Original</label>
-          <textarea
-            value={oldText}
-            onChange={(e) => setOldText(e.target.value)}
-            placeholder="Paste original text, code or YAML..."
-            className="h-32 md:h-40 w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg resize-none font-mono text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
-          />
-        </div>
-        <div className="flex flex-col">
-          <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Modified</label>
-          <textarea
-            value={newText}
-            onChange={(e) => setNewText(e.target.value)}
-            placeholder="Paste modified text, code or YAML..."
-            className="h-32 md:h-40 w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg resize-none font-mono text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
-          />
+    <div className="h-full flex flex-col p-6 bg-white dark:bg-gray-900">
+      <div className="mb-4 flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-bold text-gray-800 dark:text-white">Text Compare</h2>
+          <p className="text-gray-500 dark:text-gray-400 mt-1">
+            Compare differences between two texts, similar to Git Diff
+            <span className="ml-2 text-xs text-gray-400 dark:text-gray-500">Cmd+Enter compare · Cmd+Shift+S swap · Cmd+K clear</span>
+          </p>
         </div>
       </div>
 
+      {/* Input Area */}
+      <ResponsiveGrid className="mb-2">
+        <TextAreaPanel
+          label="Original"
+          value={oldText}
+          onChange={setOldText}
+          placeholder="Paste original text, code or YAML..."
+          actions={
+            <Button onClick={handleSwap} variant="ghost" size="sm" className="text-slate-500 dark:text-slate-200">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+              </svg>
+              Swap
+            </Button>
+          }
+          minHeight="min-h-[160px] md:min-h-[200px]"
+        />
+        <TextAreaPanel
+          label="Modified"
+          value={newText}
+          onChange={setNewText}
+          placeholder="Paste modified text, code or YAML..."
+          minHeight="min-h-[160px] md:min-h-[200px]"
+        />
+      </ResponsiveGrid>
+
       {/* Action Buttons */}
-      <div className="flex flex-wrap items-center gap-2 md:gap-4 mb-4">
+      <div className="flex flex-wrap items-center gap-2 md:gap-4 mb-2">
         <ButtonGroup>
-          <button
+          <Button
             onClick={handleCompare}
             disabled={comparing || (!oldText && !newText)}
-            className="px-3 md:px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 text-sm"
+            className="px-4"
           >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-            </svg>
             {comparing ? 'Comparing...' : 'Compare'}
-          </button>
-          <button
-            onClick={handleSwap}
-            className="p-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
-            title="Swap"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
-            </svg>
-          </button>
-          <button
-            onClick={handleClear}
-            className="px-3 md:px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors text-sm"
-          >
+          </Button>
+          <Button onClick={handleClear} variant="secondary">
             Clear
-          </button>
+          </Button>
         </ButtonGroup>
 
         {/* View Toggle */}
         <div className="flex items-center gap-2 ml-auto">
-          <span className="text-sm text-gray-600 dark:text-gray-400 hidden sm:inline">View:</span>
-          <button
+          <span className="text-sm text-slate-500 dark:text-slate-400 hidden sm:inline">View:</span>
+          <Button
             onClick={() => setViewMode('split')}
-            className={`px-2 md:px-3 py-1 text-sm rounded ${
-              viewMode === 'split'
-                ? 'bg-blue-600 text-white'
-                : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
-            }`}
+            size="sm"
+            variant={viewMode === 'split' ? 'primary' : 'secondary'}
+            className={viewMode === 'split' ? '' : 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-100'}
           >
             Split
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={() => setViewMode('unified')}
-            className={`px-2 md:px-3 py-1 text-sm rounded ${
-              viewMode === 'unified'
-                ? 'bg-blue-600 text-white'
-                : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
-            }`}
+            size="sm"
+            variant={viewMode === 'unified' ? 'primary' : 'secondary'}
+            className={viewMode === 'unified' ? '' : 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-100'}
           >
             Unified
-          </button>
+          </Button>
         </div>
       </div>
 
       {/* Statistics */}
       {stats && (
         <div className="flex flex-wrap items-center gap-3 md:gap-4 mb-4 text-sm">
-          <span className="text-green-600 dark:text-green-400">+{stats.additions} additions</span>
-          <span className="text-red-600 dark:text-red-400">-{stats.deletions} deletions</span>
-          <span className="text-gray-600 dark:text-gray-400">{stats.changes} changes total</span>
+          <Badge variant="primary">+{stats.additions} additions</Badge>
+          <Badge variant="muted">-{stats.deletions} deletions</Badge>
+          <span className="text-slate-600 dark:text-slate-400">{stats.changes} changes total</span>
         </div>
       )}
 
@@ -276,6 +267,6 @@ export function DiffTool() {
           </div>
         </div>
       )}
-    </ToolPanel>
+    </div>
   );
 }

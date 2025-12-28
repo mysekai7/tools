@@ -1,4 +1,7 @@
 .PHONY: dev build clean install help frontend-install frontend-build
+.PHONY: package
+
+VERSION ?= $(shell git describe --tags --always --dirty 2>/dev/null || echo dev)
 
 # Default target
 help:
@@ -26,18 +29,35 @@ frontend-install:
 # Build frontend only
 frontend-build:
 	@echo "Building frontend..."
-	cd frontend && npm run build
+	cd frontend && VITE_APP_VERSION=$(VERSION) npm run build:version
 
-# Run in development mode
-dev:
-	@echo "Starting development server..."
-	wails dev
+# Run in development mode (fresh frontend build + backend dev using built assets)
+dev: frontend-install frontend-build
+	@echo "Starting development server (frontend built, backend dev using dist assets, no Vite dev server)..."
+	VITE_APP_VERSION=$(VERSION) GOCACHE=$(shell pwd)/.gocache wails dev -m -assetdir $(shell pwd)/frontend/dist -frontenddevserverurl "" -noreload
 
 # Build production application
 build:
 	@echo "Building production application..."
-	wails build
+	VITE_APP_VERSION=$(VERSION) wails build
 	@echo "Build complete! Application is in build/bin/"
+
+package: frontend-build
+	@echo "Building macOS packages for amd64 and arm64..."
+	@rm -rf output && mkdir -p output
+	@echo "Building darwin/amd64..."
+	VITE_APP_VERSION=$(VERSION) wails build -platform darwin/amd64
+	@rm -rf output/darwin-amd64 && mkdir -p output/darwin-amd64
+	@cp -R build/bin/DevTools.app output/darwin-amd64/DevTools.app
+	@cd output && zip -qry DevTools-$(VERSION)-darwin-amd64.zip darwin-amd64
+	@rm -rf build/bin
+	@echo "Building darwin/arm64..."
+	VITE_APP_VERSION=$(VERSION) wails build -platform darwin/arm64
+	@rm -rf output/darwin-arm64 && mkdir -p output/darwin-arm64
+	@cp -R build/bin/DevTools.app output/darwin-arm64/DevTools.app
+	@cd output && zip -qry DevTools-$(VERSION)-darwin-arm64.zip darwin-arm64
+	@echo "Packages ready in output/:"
+	@ls -1 output/*.zip
 
 # Build for specific platform
 build-darwin:

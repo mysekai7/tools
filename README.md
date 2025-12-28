@@ -46,7 +46,7 @@ A Mac desktop utility application built with Wails (Go + React + TypeScript).
 
 - **Backend**: Go 1.23 + Wails v2
 - **Frontend**: React 18 + TypeScript + Vite
-- **UI**: Tailwind CSS + Headless UI
+- **UI**: Tailwind CSS v4 + Radix UI primitives + custom components
 
 ## Project Structure
 
@@ -83,10 +83,10 @@ tools/
 ## Quick Start
 
 ```bash
-# Install dependencies
+# Install dependencies (Go modules + frontend npm)
 make install
 
-# Run in development mode
+# Run in development mode (builds frontend, then starts Wails dev on built assets)
 make dev
 
 # Build for production
@@ -101,9 +101,14 @@ make build
 make dev
 ```
 
-This starts:
-- Vite dev server at http://localhost:5173
-- Wails dev server at http://localhost:34115
+What happens:
+- Installs frontend dependencies if needed.
+- Builds the frontend once (`npm run build` → `frontend/dist`).
+- Starts Wails dev serving `frontend/dist` (no Vite dev server proxy).
+
+Tips:
+- After changing frontend code, rerun `make dev` (or `make frontend-build`) to refresh `dist`.
+- Wails dev server runs at http://localhost:34115 using the built assets.
 
 ### Build Application
 
@@ -114,6 +119,17 @@ make build
 # Clean build artifacts
 make clean
 ```
+
+### Package for distribution
+
+```bash
+# Build amd64 + arm64 and zip to output/ with git tag/commit in filename
+make package
+```
+
+`make package` derives `VERSION` from `git describe --tags --always --dirty` (fallback `dev`) and produces:
+- `output/DevTools-<version>-darwin-amd64.zip`
+- `output/DevTools-<version>-darwin-arm64.zip`
 
 ## Adding New Tools
 
