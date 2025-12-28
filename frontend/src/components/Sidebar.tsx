@@ -74,7 +74,6 @@ export function Sidebar({
           <div className="space-y-1">
             <div className="flex items-center gap-2">
               <h1 className="text-xl font-semibold tracking-tight">DevTools</h1>
-              <Badge variant="primary">Beta</Badge>
             </div>
             <p className="text-xs text-slate-400">Developer utilities toolkit</p>
           </div>
